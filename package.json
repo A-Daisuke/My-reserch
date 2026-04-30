@@ -11,6 +11,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "typhonjs-escomplex": "^0.1.0"
+    "typhonjs-escomplex": "^0.1.0",
+    "xlsx": "^0.18.5"
   }
 }

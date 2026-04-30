@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const escomplex = require('typhonjs-escomplex');
+const XLSX = require('xlsx');
 
 // ==========================================
 // 設定項目
@@ -9,10 +10,8 @@ const escomplex = require('typhonjs-escomplex');
 const TARGET_DIR = '../Dataset'; 
 // パフォーマンスデータ（JSON）のパス
 const PERF_JSON_PATH = '../microbenchmark/mb_speed_diff_sort.json';
-// 出力するCSVファイル名（個別の結果）
-const OUTPUT_CSV_ALL = 'all_metrics_report.csv';
-// 出力するCSVファイル名（slow - fast の差分）
-const OUTPUT_CSV_DIFF = 'metrics_diff_report.csv';
+// 出力するExcelファイル名
+const OUTPUT_XLSX = 'metrics_report.xlsx';
 // ==========================================
 
 /**
@@ -79,15 +78,13 @@ function generateReport() {
     return;
   }
 
-  // IDごとにデータを集約するためのオブジェクト
-  // { "id": { "fast": { metrics }, "slow": { metrics } } }
+  // データ格納用
+  const allDataRows = [];
   const idGroupedData = {};
-
-  // CSV（個別）のヘッダー
-  let csvAllContent = 'File Path,ID,Type,Cyclomatic Complexity,Halstead Volume,Maintainability Index,Slow-Fast MediTime\n';
   let successCount = 0;
 
   jsFiles.forEach(filePath => {
+    const relativePath = path.relative(process.cwd(), filePath);
     try {
       const code = fs.readFileSync(filePath, 'utf-8');
       const result = escomplex.analyzeModule(code);
@@ -101,10 +98,16 @@ function generateReport() {
       const type = fileName.includes('_fast') ? 'fast' : 'slow';
       const perfValue = id && perfMap.has(id) ? perfMap.get(id) : null;
 
-      // 個別CSV用の行追加
-      const relativePath = path.relative(process.cwd(), filePath);
-      const perfStr = perfValue !== null ? perfValue.toFixed(4) : 'N/A';
-      csvAllContent += `"${relativePath}",${id || 'N/A'},${type},${cc},${hv.toFixed(2)},${mi.toFixed(2)},${perfStr}\n`;
+      // 個別データ追加
+      allDataRows.push({
+        'File Path': relativePath,
+        'ID': id ? parseInt(id) : 'N/A',
+        'Type': type,
+        'Cyclomatic Complexity': cc,
+        'Halstead Volume': parseFloat(hv.toFixed(2)),
+        'Maintainability Index': parseFloat(mi.toFixed(2)),
+        'Slow-Fast MediTime': perfValue !== null ? parseFloat(perfValue.toFixed(4)) : 'N/A'
+      });
 
       // 差分計算用の集約
       if (id) {
@@ -115,19 +118,21 @@ function generateReport() {
       successCount++;
       
     } catch (error) {
-      const relativePath = path.relative(process.cwd(), filePath);
       console.error(`Error analyzing ${relativePath}: ${error.message}`);
-      csvAllContent += `"${relativePath}",N/A,N/A,Error,Error,Error,Error\n`;
+      allDataRows.push({
+        'File Path': relativePath,
+        'ID': 'N/A',
+        'Type': 'N/A',
+        'Cyclomatic Complexity': 'Error',
+        'Halstead Volume': 'Error',
+        'Maintainability Index': 'Error',
+        'Slow-Fast MediTime': 'Error'
+      });
     }
   });
 
-  // 1. 個別レポート保存
-  fs.writeFileSync(OUTPUT_CSV_ALL, csvAllContent, 'utf-8');
-
-  // 2. 差分レポート作成
-  let csvDiffContent = 'ID,CC Diff (slow-fast),HV Diff (slow-fast),MI Diff (slow-fast),Slow-Fast MediTime\n';
-  
-  // IDを数値順にソートして出力
+  // 差分データの作成
+  const diffDataRows = [];
   const sortedIds = Object.keys(idGroupedData).sort((a, b) => parseInt(a) - parseInt(b));
 
   sortedIds.forEach(id => {
@@ -137,17 +142,35 @@ function generateReport() {
       const hvDiff = data.slow.hv - data.fast.hv;
       const miDiff = data.slow.mi - data.fast.mi;
       const perfValue = perfMap.get(id);
-      const perfStr = perfValue !== null && perfValue !== undefined ? perfValue.toFixed(4) : 'N/A';
 
-      csvDiffContent += `${id},${ccDiff},${hvDiff.toFixed(2)},${miDiff.toFixed(2)},${perfStr}\n`;
+      diffDataRows.push({
+        'ID': parseInt(id),
+        'CC Diff (slow-fast)': ccDiff,
+        'HV Diff (slow-fast)': parseFloat(hvDiff.toFixed(2)),
+        'MI Diff (slow-fast)': parseFloat(miDiff.toFixed(2)),
+        'Slow-Fast MediTime': perfValue !== null && perfValue !== undefined ? parseFloat(perfValue.toFixed(4)) : 'N/A'
+      });
     }
   });
 
-  fs.writeFileSync(OUTPUT_CSV_DIFF, csvDiffContent, 'utf-8');
+  // Excelワークブックの作成
+  const wb = XLSX.utils.book_new();
+
+  // シート1: 個別データ
+  const wsAll = XLSX.utils.json_to_sheet(allDataRows);
+  XLSX.utils.book_append_sheet(wb, wsAll, 'All Metrics');
+
+  // シート2: 差分データ
+  const wsDiff = XLSX.utils.json_to_sheet(diffDataRows);
+  XLSX.utils.book_append_sheet(wb, wsDiff, 'Metrics Diff');
+
+  // ファイル書き出し
+  XLSX.writeFile(wb, OUTPUT_XLSX);
 
   console.log('\n=========================================');
-  console.log(`Individual Report: ${OUTPUT_CSV_ALL}`);
-  console.log(`Difference Report: ${OUTPUT_CSV_DIFF}`);
+  console.log(`Excel Report generated: ${OUTPUT_XLSX}`);
+  console.log(` - Sheet 1: All Metrics (${allDataRows.length} rows)`);
+  console.log(` - Sheet 2: Metrics Diff (${diffDataRows.length} rows)`);
   console.log(`Successfully analyzed: ${successCount} / ${jsFiles.length} files`);
   console.log('=========================================');
 }
