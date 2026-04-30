@@ -1,0 +1,18 @@
+const Benchmark = {
+    run: function() {
+        var VAR_1 = {
+          KEY_1: {
+            KEY_2: {
+              KEY_3: 0,
+              KEY_4: function (VAR_2) {
+                this.KEY_3 += VAR_2;
+              },
+            },
+          },
+        };
+        var VAR_3 = VAR_1.KEY_1.KEY_2.KEY_4.bind(VAR_1.KEY_1.KEY_2);
+        for (var VAR_6 = 0; VAR_6 < 1000; VAR_6++) {
+          VAR_1.KEY_1.KEY_2.KEY_4(VAR_6);
+        }
+    }
+};

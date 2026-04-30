@@ -1,0 +1,12 @@
+const Benchmark = {
+    run: function() {
+        function FUNCTION_1() {
+          return Math.random() < 0.5 ? "one" : "three";
+        }
+        var VAR_5 = "",
+          VAR_3;
+        for (VAR_3 = 0; VAR_3 < 1000; VAR_3++) {
+          VAR_5 += FUNCTION_1();
+        }
+    }
+};

@@ -1,0 +1,9 @@
+const Benchmark = {
+    run: function() {
+        function FUNCTION_1(VAR_1) {
+          if (VAR_1 == 1000) return VAR_1;
+          return FUNCTION_1(VAR_1 + 1);
+        }
+        FUNCTION_1(0);
+    }
+};

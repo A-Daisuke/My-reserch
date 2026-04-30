@@ -1,0 +1,14 @@
+const Benchmark = {
+    run: function() {
+        function FUNCTION_1() {
+          var VAR_1 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+          return VAR_1;
+        }
+        var VAR_2 = 1000;
+        var VAR_3 = VAR_2 * FUNCTION_1().length;
+        var VAR_7 = "";
+        for (var VAR_5 = 0; VAR_5 < VAR_2; VAR_5++) {
+          VAR_7 += FUNCTION_1();
+        }
+    }
+};

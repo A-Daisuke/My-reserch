@@ -1,0 +1,11 @@
+const Benchmark = {
+    run: function() {
+        var VAR_1 = 10000,
+          VAR_2,
+          VAR_3 =
+            "blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah";
+        for (VAR_2 = 0; VAR_2 < VAR_1; VAR_2++) {
+          VAR_3.replace(/\s+/g, "");
+        }
+    }
+};

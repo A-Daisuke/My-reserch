@@ -1,0 +1,16 @@
+const Benchmark = {
+    run: function() {
+        var VAR_1 = 100;
+        function FUNCTION_1() {
+          for (var VAR_2 = 0; VAR_2 < VAR_1; ++VAR_2) {
+            try {
+              window.VAR_3 = Math.random();
+              throw new Error("test error");
+            } catch (VAR_4) {
+              var VAR_5 = VAR_4.stack;
+            }
+          }
+        }
+        FUNCTION_1();
+    }
+};

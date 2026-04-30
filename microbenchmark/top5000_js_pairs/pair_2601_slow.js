@@ -1,0 +1,8 @@
+const Benchmark = {
+    run: function() {
+        var VAR_1 = new ArrayBuffer(1024 * 1024);
+        var VAR_2 = new Uint8Array(VAR_1);
+        var VAR_3 = new Uint8Array(1024 * 1024);
+        VAR_3.set(VAR_2);
+    }
+};

@@ -1,0 +1,12 @@
+const Benchmark = {
+    run: function() {
+        const VAR_1 = [];
+        for (var VAR_2 = 0; VAR_2 < 10000; VAR_2++) {
+          VAR_1.push([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]);
+        }
+        let VAR_3 = [];
+        VAR_1.forEach((VAR_4) => {
+          VAR_3.push(...VAR_4);
+        });
+    }
+};

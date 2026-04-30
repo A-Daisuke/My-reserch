@@ -1,0 +1,9 @@
+const Benchmark = {
+    run: function() {
+        const VAR_1 = Number(1000000000);
+        const VAR_2 = "en-IN";
+        const VAR_3 = new Intl.NumberFormat(VAR_2).VAR_3;
+        const VAR_5 = /(\d)(?=(\d{2})+\d\.)/g;
+        VAR_1.toLocaleString(VAR_2);
+    }
+};

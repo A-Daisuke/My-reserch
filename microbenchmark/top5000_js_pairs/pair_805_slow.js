@@ -1,0 +1,11 @@
+const Benchmark = {
+    run: function() {
+        var VAR_1 = new Array(1000000);
+        function FUNCTION_1() {
+          return 2 + 2;
+        }
+        for (elemento of VAR_1) {
+          2 + 2;
+        }
+    }
+};

@@ -1,0 +1,12 @@
+const Benchmark = {
+    run: function() {
+        var VAR_1 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_";
+        var VAR_2 = VAR_1.split("");
+        function FUNCTION_1(VAR_3) {
+          for (let VAR_4 of VAR_1) {
+            VAR_3(VAR_4);
+          }
+        }
+        FUNCTION_1((VAR_5) => !!VAR_1.match(VAR_5));
+    }
+};

@@ -1,0 +1,10 @@
+const Benchmark = {
+    run: function() {
+        var VAR_1 = "regexes are fun";
+        var VAR_2 = new RegExp("x", "i");
+        for (var VAR_3 = 0; VAR_3 < 100; VAR_3++) {
+          var VAR_4 = new RegExp("x", "g");
+          var VAR_5 = VAR_4.exec(VAR_1);
+        }
+    }
+};

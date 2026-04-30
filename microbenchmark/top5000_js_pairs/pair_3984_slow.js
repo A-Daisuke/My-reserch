@@ -1,0 +1,25 @@
+const Benchmark = {
+    run: function() {
+        var VAR_1 = [];
+        var VAR_2 = "push";
+        var VAR_3 = VAR_1.push;
+        function FUNCTION_1(VAR_4, VAR_5) {
+          if (VAR_2 == "push") {
+            VAR_1.push(VAR_5);
+          } else {
+            VAR_1.shift(VAR_5);
+          }
+          VAR_1.pop();
+        }
+        function FUNCTION_2(VAR_6, VAR_7) {
+          VAR_6.call(VAR_1, VAR_7);
+          VAR_1.pop();
+        }
+        for (var VAR_8 = 0; VAR_8 < 1000; VAR_8++) {
+          FUNCTION_2(VAR_1.push, 1);
+        }
+        for (var VAR_9 = 0; VAR_8 < 1000; VAR_8++) {
+          FUNCTION_2(VAR_1.shift, 2);
+        }
+    }
+};

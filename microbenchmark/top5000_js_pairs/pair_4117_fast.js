@@ -1,0 +1,12 @@
+const Benchmark = {
+    run: function() {
+        var VAR_1 = [];
+        for (var VAR_2 = 0; VAR_2 < 1000; VAR_2++) {
+          VAR_1.push("zzzzzzzzzzzzzzzzzv" + VAR_2);
+        }
+        var VAR_6 = "";
+        for (var VAR_4 in VAR_1) {
+          VAR_6 += VAR_1[VAR_2];
+        }
+    }
+};

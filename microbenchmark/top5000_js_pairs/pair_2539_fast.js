@@ -1,0 +1,12 @@
+const Benchmark = {
+    run: function() {
+        var VAR_2 = "";
+        var VAR_3 = "";
+        var VAR_4 = 0;
+        var VAR_5 = 0;
+        try {
+          function FUNCTION_1(VAR_8) {}
+          for (var VAR_6 = 0; VAR_6 < 10000; VAR_6++) FUNCTION_1();
+        } catch (VAR_7) {}
+    }
+};

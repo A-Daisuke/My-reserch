@@ -1,0 +1,12 @@
+const Benchmark = {
+    run: function() {
+        var VAR_1 = 1000;
+        var VAR_2 = [];
+        var VAR_3 = VAR_1;
+        while (VAR_3--) {
+          VAR_2.push(Math.random().toString(36).substring(2));
+        }
+        for (var VAR_4 in VAR_2) {
+        }
+    }
+};

@@ -1,0 +1,9 @@
+const Benchmark = {
+    run: function() {
+        for (var VAR_2 = 0; VAR_2 < 100000; VAR_2++)
+          var FUNCTION_2 = function (VAR_6) {
+            return VAR_6;
+          };
+        FUNCTION_2();
+    }
+};
